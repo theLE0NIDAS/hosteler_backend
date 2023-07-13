@@ -1,0 +1,146 @@
+#################################################
+Student
+#################################################
+
+-> http://127.0.0.1:8000/student/
+[working]
+
+-> http://127.0.0.1:8000/student/search/
+[not working]
+
+-> http://127.0.0.1:8000/student/2021BCS-033/
+{
+  "roll_number": "2021BCS-033",
+  "first_name": "Himanshu",
+  "last_name": "Singh",
+  "date_of_birth": "2002-10-29",
+  "gender": "Male",
+  "address": "Gwalior",
+  "contact_number": "7894561230",
+  "blood_group": "A+",
+  "photo": null,
+  "email_address": "himanshu@iiitm.ac.in",
+  "batch": 2021,
+  "department": "CSE",
+  "course": "B.Tech",
+  "parent_first_name": "fxtghsftgdh",
+  "parent_last_name": "setg",
+  "parent_email": "etrgetr@email.com",
+  "parent_contact_number": "7895461230",
+  "created_at": "2023-07-10T20:32:39.267042Z",
+  "updated_at": "2023-07-10T20:32:39.267042Z"
+}
+
+-> http://127.0.0.1:8000/student/create/
+[not working]
+
+-> http://127.0.0.1:8000/student/2021BCS-033/update/
+{
+  "first_name": "Devansh",
+  "last_name": "Sengar",
+  "date_of_birth": "2002-10-16",
+  "gender": "Male",
+  "address": "Gwalior",
+  "contact_number": "8974653514",
+  "blood_group": "O+",
+  "photo": null,
+  "email_address": "devansh@iiitm.ac.in",
+  "batch": 2021,
+  "department": "CSE",
+  "course": "B.Tech",
+  "parent_first_name": "fxtghsdvsftgdh",
+  "parent_last_name": "segrtsg",
+  "parent_email": "etrgsgsetr@email.com",
+  "parent_contact_number": "7893461230"
+}
+
+-> http://127.0.0.1:8000/student/2021BCS-033/delete/
+[working]
+
+#################################################
+Room
+#################################################
+
+-> http://127.0.0.1:8000/room/
+[working]
+
+-> http://127.0.0.1:8000/room/search/
+[not working]
+
+-> http://127.0.0.1:8000/room/201/
+{
+  "room_number": "201",
+  "floor_number": 2,
+  "capacity": 1,
+  "occupancy_status": "VACANT",
+  "check_in_date": null,
+  "check_out_date": null,
+  "student": null
+}
+
+-> http://127.0.0.1:8000/room/create/
+{
+  "num_rooms" : 10,
+  "floor_number" : 2
+}
+
+-> http://127.0.0.1:8000/room/register/201/
+{
+  "student": "2021BCS-033",
+  "check_in_date": "2022-06-01"
+}
+
+-> http://127.0.0.1:8000/room/deregister/201/
+[working]
+
+-> http://127.0.0.1:8000/room/delete/201/
+[working]
+
+#################################################
+Resource
+#################################################
+
+-> http://127.0.0.1:8000/resource/
+[working]
+
+-> http://127.0.0.1:8000/resource/search/
+[not working]
+
+-> http://127.0.0.1:8000/resource/ELE-1/
+{
+  "resource_id": "ELE-1",
+  "name": "fan",
+  "description": "room ceiling fan",
+  "correct_count": 20,
+  "damaged_count": 0,
+  "total_count": 20,
+  "resource_type": "ELECTRICAL",
+  "resource_photo": null,
+  "created_at": "2023-07-11T18:05:19.882264Z",
+  "updated_at": "2023-07-11T18:05:19.882264Z"
+}
+
+-> http://127.0.0.1:8000/resource/create/
+[not working]
+
+-> http://127.0.0.1:8000/resource/ELE-1/update/
+{
+  "resource_id": "ELE-1",
+  "name": "fan",
+  "description": "room ceiling fan",
+  "correct_count": 15,
+  "damaged_count": 5,
+  "total_count": 20,
+  "resource_type": "ELECTRICAL",
+  "resource_photo": null,
+  "created_at": "2023-07-11T18:05:19.882264Z",
+  "updated_at": "2023-07-11T18:36:33.055134Z"
+}
+
+-> http://127.0.0.1:8000/resource/ELE-1/delete/
+[working]
+
+#################################################
+Mess
+#################################################
+
