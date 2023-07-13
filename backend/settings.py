@@ -165,7 +165,9 @@ DATABASES={
    }
 }
 
-DATABASES['default'] = dj_database_url.parse('postgres://hosteler_user:1ZFKQOkj4YXyDihgwojRcBz642gbhq1P@dpg-cio32mdph6ei90diuoqg-a.singapore-postgres.render.com/hosteler')
+# DATABASES['default'] = dj_database_url.parse('postgres://hosteler_user:1ZFKQOkj4YXyDihgwojRcBz642gbhq1P@dpg-cio32mdph6ei90diuoqg-a.singapore-postgres.render.com/hosteler')
+DATABASES['default'] = dj_database_url.parse('postgres://theLE0NIDAS:0jiabAtqLs3v@ep-frosty-silence-086437.ap-southeast-1.aws.neon.tech/neondb')
+
 
 
 
