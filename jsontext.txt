@@ -6,7 +6,9 @@ Student
 [working]
 
 -> http://127.0.0.1:8000/student/search/
-[not working]
+{
+  "q": "him"
+}
 
 -> http://127.0.0.1:8000/student/2021BCS-033/
 {
@@ -32,7 +34,7 @@ Student
 }
 
 -> http://127.0.0.1:8000/student/create/
-[not working]
+[working]
 
 -> http://127.0.0.1:8000/student/2021BCS-033/update/
 {
@@ -65,7 +67,9 @@ Room
 [working]
 
 -> http://127.0.0.1:8000/room/search/
-[not working]
+{
+  "q": "201"
+}
 
 -> http://127.0.0.1:8000/room/201/
 {
@@ -104,7 +108,9 @@ Resource
 [working]
 
 -> http://127.0.0.1:8000/resource/search/
-[not working]
+{
+  "q": "Elec"
+}
 
 -> http://127.0.0.1:8000/resource/ELE-1/
 {
@@ -121,7 +127,14 @@ Resource
 }
 
 -> http://127.0.0.1:8000/resource/create/
-[not working]
+{
+  "name": "fan",
+  "description": "mess ceiling fan",
+  "correct_count": 10,
+  "damaged_count": 0,
+  "resource_type": "ELECTRICAL",
+  "resource_photo": null
+}
 
 -> http://127.0.0.1:8000/resource/ELE-1/update/
 {
@@ -144,3 +157,133 @@ Resource
 Mess
 #################################################
 
+-> http://127.0.0.1:8000/mess/create/
+{
+  "vendor_name": "Shiv Caterers",
+  "manager_name": "Sohan Pal",
+  "contact_number": 1897456321,
+  "cost_per_day": 101.5,
+  "rebate_percentage": 75,
+  "contract_start_date": "2023-06-01",
+  "contract_duration": 6,
+  "menu_image": null
+}
+
+-> http://127.0.0.1:8000/mess/update/1/
+{
+  "vendor_name": "Shiv Caterers",
+  "manager_name": "Sohan Pal",
+  "contact_number": 1897456321,
+  "cost_per_day": 101.5,
+  "rebate_percentage": 75.5,
+  "contract_start_date": "2023-06-01",
+  "contract_duration": 6,
+  "menu_image": null
+}
+
+-> http://127.0.0.1:8000/mess/delete/2/
+[working]
+
+-> http://127.0.0.1:8000/mess/1/
+{
+  "mess_id": 1,
+  "vendor_name": "Shiv Caterers",
+  "manager_name": "Sohan Pal",
+  "contact_number": "1897456321",
+  "cost_per_day": "101.50",
+  "rebate_percentage": "75.50",
+  "contract_start_date": "2023-06-01",
+  "contract_end_date": "2023-12-01",
+  "contract_duration": 6,
+  "menu_image": null
+}
+
+#################################################
+Complaint
+#################################################
+
+-> http://127.0.0.1:8000/complaint/create/
+{
+  "student": "2021BCS-034",
+  "category": "ELECTRICAL",
+  "location": "101",
+  "description": "tubelight not working",
+  "photo": null
+}
+
+-> http://127.0.0.1:8000/complaint/search/
+{
+  "q": "Elec"
+}
+
+-> http://127.0.0.1:8000/complaint/mycomplaint/2021BCS-033/
+[working]
+
+-> http://127.0.0.1:8000/complaint/list/
+[working]
+
+-> http://127.0.0.1:8000/complaint/delete/3/
+[working]
+
+#################################################
+Attendance
+#################################################
+
+-> http://127.0.0.1:8000/attendance/
+[working]
+
+-> http://127.0.0.1:8000/attendance/create/
+[
+  {
+    "id": 1,
+    "date": "2023-07-12",
+    "status": "ABSENT",
+    "created_at": "2023-07-12T07:13:05.725726Z",
+    "updated_at": "2023-07-12T07:13:05.725726Z",
+    "student": "2021BCS-033"
+  }
+]
+
+-> http://127.0.0.1:8000/attendance/update/2021BCS-033/
+{
+  "status": "PRESENT"
+}
+
+-> http://127.0.0.1:8000/attendance/2021BCS-033/
+[working]
+
+
+-> http://127.0.0.1:8000/attendance/leave/
+[working]
+
+-> http://127.0.0.1:8000/attendance/leave/create/
+{
+  "student": "2021BCS-023",
+  "leave_from": "2023-07-11",
+  "leave_to": "2023-07-15",
+  "leave_location": "Home",
+  "reason_for_leave": "Vacation"
+}
+
+-> http://127.0.0.1:8000/attendance/leave/update/1/
+{
+  "status": "APPROVED"
+}
+
+-> http://127.0.0.1:8000/attendance/leave/myleave/2021BCS-023/
+[
+  {
+    "leave_id": 1,
+    "leave_from": "2023-07-11",
+    "leave_to": "2023-07-15",
+    "leave_location": "Home",
+    "reason_for_leave": "Vacation",
+    "status": "APPROVED",
+    "created_at": "2023-07-12T08:09:54.951255Z",
+    "updated_at": "2023-07-12T08:14:22.391147Z",
+    "student": "2021BCS-023"
+  }
+]
+
+-> http://127.0.0.1:8000/attendance/leave/delete/1/
+[working]

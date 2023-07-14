@@ -44,7 +44,7 @@ def api_attendance_search(request):
     serializer = AttendanceSerializer(attendances, many=True)
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['GET'])
 def api_attendance_create(request):
     if not admin_required(request):
         return HttpResponse('Unauthorized', status=401)
