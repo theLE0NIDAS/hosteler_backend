@@ -79,21 +79,35 @@ def student_required(function):
             return False
     return False
 
+# def admin_or_student_required(function):
+#     # @wraps(function)
+#     # def wrap(request, *args, **kwargs):
+#     #     if request.user.is_staff or not request.user.is_staff:
+#     #         return function(request, *args, **kwargs)
+#     #     else:
+#     #         return HttpResponse('Unauthorized', status=401)
+#     # return wrap
+#     token = request.META['HTTP_AUTHORIZATION']
+#     if token:
+#         token = token.split(' ')[1]
+#         try:
+#             payload = jwt.decode(token, 'secret', algorithm='HS256')
+#             request.payload = payload
+#             return True
+#         except:
+#             return False
+#     return False
+
 def admin_or_student_required(function):
-    # @wraps(function)
-    # def wrap(request, *args, **kwargs):
-    #     if request.user.is_staff or not request.user.is_staff:
-    #         return function(request, *args, **kwargs)
-    #     else:
-    #         return HttpResponse('Unauthorized', status=401)
-    # return wrap
-    token = request.META['HTTP_AUTHORIZATION']
-    if token:
-        token = token.split(' ')[1]
-        try:
-            payload = jwt.decode(token, 'secret', algorithm='HS256')
-            request.payload = payload
-            return True
-        except:
-            return False
-    return False
+    def wrap(request, *args, **kwargs):
+        token = request.META.get('HTTP_AUTHORIZATION')
+        if token:
+            token = token.split(' ')[1]
+            try:
+                payload = jwt.decode(token, 'secret', algorithm='HS256')
+                request.payload = payload
+                return function(request, *args, **kwargs)
+            except:
+                return Response({'message': 'Invalid token'}, status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
+    return wrap
