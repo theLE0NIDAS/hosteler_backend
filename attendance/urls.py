@@ -3,6 +3,10 @@ from . import views
 
 urlpatterns = [
     # API views
+    path('', views.api_attendance_list, name='api_attendance_list'),
+    path('search/', views.api_attendance_search, name='api_attendance_search'),
+    path('create/', views.api_attendance_create, name='api_attendance_create'),
+    path('update/<str:roll_number>/', views.api_attendance_update, name='api_attendance_update'),
 
     path('leave/', views.api_leave_list, name='api_leave_list'),
     # path('leave/<int:leave_id>/', views.api_leave_detail, name='api_leave_detail'),
@@ -18,10 +22,6 @@ urlpatterns = [
     # path('rebate/<int:rebate_id>/update/', views.api_rebate_update, name='api_rebate_update'),
     # path('rebate/<int:rebate_id>/delete/', views.api_rebate_delete, name='api_rebate_delete'),
     
-    path('', views.api_attendance_list, name='api_attendance_list'),
-    path('search/', views.api_attendance_search, name='api_attendance_search'),
-    path('create/', views.api_attendance_create, name='api_attendance_create'),
-    path('update/<str:roll_number>/', views.api_attendance_update, name='api_attendance_update'),
     path('<str:roll_number>/', views.api_attendance_detail, name='api_attendance_detail'),
     # path('<int:attendance_id>/delete/', views.api_attendance_delete, name='api_attendance_delete'),
 ]
