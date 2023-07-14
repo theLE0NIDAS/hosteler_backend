@@ -16,6 +16,7 @@ import dj_database_url
 import os
 import environ
 import corsheaders
+from corsheaders.middleware import CorsMiddleware
 # from . import custom_auth_backend
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -70,7 +71,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
 
 # AUTHENTICATION_BACKENDS = [
 #     'custom_auth_backend.CustomAuthBackend',
