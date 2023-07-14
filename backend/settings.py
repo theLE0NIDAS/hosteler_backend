@@ -15,6 +15,7 @@ from datetime import timedelta
 import dj_database_url
 import os
 import environ
+import corsheaders
 # from . import custom_auth_backend
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
