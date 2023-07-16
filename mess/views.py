@@ -14,7 +14,7 @@ from .models import Mess
 @api_view(['GET'])
 def api_mess_detail(request, mess_id):
     if not admin_or_student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     mess = get_object_or_404(Mess, mess_id=mess_id)
     serializer = MessSerializer(mess)
     return Response(serializer.data)
@@ -22,7 +22,7 @@ def api_mess_detail(request, mess_id):
 @api_view(['POST'])
 def api_mess_create(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     form = MessForm(request.data)
     if form.is_valid():
         mess = form.save(commit=False)
@@ -47,8 +47,8 @@ def api_mess_create(request):
 @api_view(['PUT'])
 def api_mess_update(request, mess_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
-    mess = get_object_or_404(Mess, mess_id=mess_id)
+        return Response({'message': 'Unauthorized'}, status=401)
+    mess = Mess.objects.get(mess_id=mess_id)
     form = MessUpdateForm(request.data, instance=mess)
     if form.is_valid():
         mess = form.save(commit=False)
@@ -67,7 +67,7 @@ def api_mess_update(request, mess_id):
 @api_view(['DELETE'])
 def api_mess_delete(request, mess_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     mess = get_object_or_404(Mess, mess_id=mess_id)
     mess.delete()
     return Response(status=204)

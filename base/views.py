@@ -3,7 +3,6 @@ from django.db import models
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from base.middleware import admin_required, student_required, admin_or_student_required
-from django.shortcuts import get_object_or_404
 # from django.contrib.auth import login, logout, authenticate
 import jwt
 from datetime import datetime , timedelta , timezone
@@ -22,8 +21,8 @@ def api_admin_create(request):
 @api_view(['PUT'])
 def api_admin_update_password(request, username):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
-    user = get_object_or_404(User, username=username)
+        return Response({'message': 'Unauthorized'}, status=401)
+    user = User.objects.get(username=username)
     old_password = request.data.get('old_password')
     new_password = request.data.get('new_password')
     if user.check_password(old_password):
@@ -35,8 +34,8 @@ def api_admin_update_password(request, username):
 @api_view(['PUT'])
 def api_student_update_password(request, roll_number):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
-    student = get_object_or_404(Student, roll_number=roll_number)
+        return Response({'message': 'Unauthorized'}, status=401)
+    student = User.objects.get(username=roll_number)
     old_password = request.data.get('old_password')
     new_password = request.data.get('new_password')
     if student.user.check_password(old_password):
@@ -53,7 +52,7 @@ def api_student_update_password(request, roll_number):
 def api_admin_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
-    user = get_object_or_404(User, username=username, is_staff=True)
+    user = User.objects.get(username=username, is_staff=True)
     if user.check_password(password):
         # user = authenticate(request, username=username, password=password)
         # login(request, user)
@@ -65,7 +64,7 @@ def api_admin_login(request):
 def api_student_login(request):
     roll_number = request.data.get('roll_number')
     password = request.data.get('password') 
-    user = get_object_or_404(User, username=roll_number, is_staff=False)
+    user = User.objects.get(username=roll_number, is_staff=False)
     if user.check_password(password):
         # login(request, user)
         token = jwt.encode({'username': roll_number, 'is_staff':user.is_staff , "exp": datetime.now(tz=timezone.utc) + timedelta(weeks=1)}, 'secret', algorithm='HS256')

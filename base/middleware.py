@@ -1,6 +1,6 @@
 # from functools import wraps
 # from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from rest_framework.response import Response
 import jwt
 def admin_required(request):
     # @wraps(function)
@@ -10,20 +10,22 @@ def admin_required(request):
     #         return function(request, *args, **kwargs)
     #     else:
     #         return HttpResponse('Unauthorized', status=401)
-    token = request.META['HTTP_AUTHORIZATION']
-    if token:
-        # Bearer <token>
-        token = token.split(' ')[1]
-        try:
-            payload = jwt.decode(token, 'secret', algorithm='HS256')
-            if payload['is_staff']:
-                request.payload = payload
-                return True
-            else:
-                return False
-        except:
-            return False
-    return False
+    def wrap(request, *args, **kwargs):
+        token = request.META['HTTP_AUTHORIZATION']
+        if token:
+            # Bearer <token>
+            token = token.split(' ')[1]
+            try:
+                payload = jwt.decode(token, 'secret', algorithm='HS256')
+                if payload['is_staff']:
+                    request.payload = payload
+                    return function(request, *args, **kwargs)
+                else:
+                    return Response({'message': 'Invalid token'}, status=401)
+            except:
+                return Response({'message': 'Invalid token'}, status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
+    return wrap
 
     #             return request
     #         else:
@@ -65,19 +67,21 @@ def student_required(function):
     #     else:
     #         return HttpResponse('Unauthorized', status=401)
     # return wrap
-    token = request.META['HTTP_AUTHORIZATION']
-    if token:
-        token = token.split(' ')[1]
-        try:
-            payload = jwt.decode(token, 'secret', algorithm='HS256')
-            if not payload['is_staff']:
-                request.payload = payload
-                return True
-            else:
-                return False
-        except:
-            return False
-    return False
+    def wrap(request, *args, **kwargs):
+        token = request.META['HTTP_AUTHORIZATION']
+        if token:
+            token = token.split(' ')[1]
+            try:
+                payload = jwt.decode(token, 'secret', algorithm='HS256')
+                if not payload['is_staff']:
+                    request.payload = payload
+                    return function(request, *args, **kwargs)
+                else:
+                    return Response({'message': 'Invalid token'}, status=401)
+            except:
+                return Response({'message': 'Invalid token'}, status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
+    return wrap
 
 # def admin_or_student_required(function):
 #     # @wraps(function)

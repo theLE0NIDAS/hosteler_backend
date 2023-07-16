@@ -10,7 +10,7 @@ from .serializers import ResourceSerializer
 @api_view(['GET'])
 def api_resource_list(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     resources = Resource.objects.all()
     if resources:
         serializer = ResourceSerializer(resources, many=True)
@@ -20,7 +20,7 @@ def api_resource_list(request):
 @api_view(['GET'])
 def api_resource_search(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     q = request.data.get('q')
     resources = Resource.objects.filter(
         Q(name__icontains=q) | 
@@ -35,7 +35,7 @@ def api_resource_search(request):
 @api_view(['GET'])
 def api_resource_detail(request, resource_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     resource = get_object_or_404(Resource, resource_id=resource_id)
     serializer = ResourceSerializer(resource)
     return Response(serializer.data)
@@ -43,7 +43,7 @@ def api_resource_detail(request, resource_id):
 @api_view(['POST'])
 def api_resource_create(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     form = ResourceForm(request.data)
     if form.is_valid():
         resource = form.save(commit=False)
@@ -67,7 +67,7 @@ def api_resource_create(request):
 @api_view(['PUT'])
 def api_resource_update(request, resource_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     resource = get_object_or_404(Resource, resource_id=resource_id)
     form = ResourceUpdateForm(request.data, instance=resource)
     if form.is_valid():
@@ -81,7 +81,7 @@ def api_resource_update(request, resource_id):
 @api_view(['DELETE'])
 def api_resource_delete(request, resource_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     resource = Resource.objects.get(resource_id=resource_id)
     resource.delete()
     return Response(status=204)

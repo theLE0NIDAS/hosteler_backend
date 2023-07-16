@@ -10,7 +10,7 @@ from .serializers import ComplaintSerializer
 @api_view(['GET'])
 def api_complaint_list(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     complaints = Complaint.objects.all()
     if complaints:
         serializer = ComplaintSerializer(complaints, many=True)
@@ -20,7 +20,7 @@ def api_complaint_list(request):
 @api_view(['GET'])
 def api_mycomplaint(request, student_id):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     complaints = Complaint.objects.filter(student_id=student_id)
     if complaints:
         serializer = ComplaintSerializer(complaints, many=True)
@@ -30,7 +30,7 @@ def api_mycomplaint(request, student_id):
 @api_view(['GET'])
 def api_complaint_search(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     q = request.data.get('q')
     complaints = Complaint.objects.filter(
         Q(category__icontains=q) | 
@@ -44,7 +44,7 @@ def api_complaint_search(request):
 @api_view(['POST'])
 def api_complaint_create(request):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     form = ComplaintForm(request.data)
     if form.is_valid():
         complaint = form.save(commit=False)
@@ -61,7 +61,7 @@ def api_complaint_create(request):
 @api_view(['PUT'])
 def api_complaint_update(request, complaint_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     form = ComplaintUpdateForm(request.data)
     complaint = get_object_or_404(Complaint, complaint_id=complaint_id)
     if form.is_valid():
@@ -74,7 +74,7 @@ def api_complaint_update(request, complaint_id):
 @api_view(['DELETE'])
 def api_complaint_delete(request, complaint_id):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     complaint = get_object_or_404(Complaint, complaint_id=complaint_id)
     complaint.delete()
     return Response(status=204)

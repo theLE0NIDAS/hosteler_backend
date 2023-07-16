@@ -18,36 +18,42 @@ from decimal import Decimal
 @api_view(['GET'])
 def api_attendance_list(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     attendances = Attendance.objects.all()
-    serializer = AttendanceSerializer(attendances, many=True)
-    return Response(serializer.data)
+    if attendances:
+        serializer = AttendanceSerializer(attendances, many=True)
+        return Response(serializer.data)
+    return Response({'message': 'No attendance found'}, status=404)
 
 @api_view(['GET'])
 def api_attendance_detail(request, roll_number):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     attendance = Attendance.objects.get(student=roll_number)
-    serializer = AttendanceSerializer(attendance)
-    return Response(serializer.data)
+    if attendance:
+        serializer = AttendanceSerializer(attendance, many=True)
+        return Response(serializer.data)
+    return Response({'message': 'No attendance found'}, status=404)
 
 @api_view(['GET'])
 def api_attendance_search(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     q = request.GET.get('q', '')
     attendances = Attendance.objects.filter(
         Q(student__icontains=q) | 
         Q(date__icontains=q) |
         Q(status__icontains=q)
     )
-    serializer = AttendanceSerializer(attendances, many=True)
-    return Response(serializer.data)
+    if attendances:
+        serializer = AttendanceSerializer(attendances, many=True)
+        return Response(serializer.data)
+    return Response({'message': 'No attendance found'}, status=404)
 
 @api_view(['GET'])
 def api_attendance_create(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     rooms = Room.objects.filter(occupancy_status='OCCUPIED')
     leaves = Leave.objects.filter(status='APPROVED')
 
@@ -70,7 +76,7 @@ def api_attendance_create(request):
 @api_view(['PUT'])
 def api_attendance_update(request, roll_number):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     student = get_object_or_404(Student, roll_number=roll_number)
     attendance = Attendance.objects.get(date=date.today(), student=roll_number)
     form = AttendanceForm(request.data, instance=attendance)
@@ -96,7 +102,7 @@ def api_attendance_update(request, roll_number):
 @api_view(['GET'])
 def api_leave_list(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     try:
         leaves = Leave.objects.all()
         serializer = LeaveSerializer(leaves, many=True)
@@ -108,10 +114,12 @@ def api_leave_list(request):
 @api_view(['GET'])
 def api_myleave(request, roll_number):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     leaves = Leave.objects.filter(student=roll_number)
-    serializer = LeaveSerializer(leaves, many=True)
-    return Response(serializer.data)
+    if leaves:
+        serializer = LeaveSerializer(leaves, many=True)
+        return Response(serializer.data)
+    return Response({'message': 'No leaves found'}, status=404)
 
 # @api_view(['GET'])
 # def api_leave_detail(request, leave_id):
@@ -122,7 +130,7 @@ def api_myleave(request, roll_number):
 @api_view(['POST'])
 def api_leave_create(request):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     form = LeaveForm(request.data)
     if form.is_valid():
         
@@ -140,7 +148,7 @@ def api_leave_create(request):
 @api_view(['PUT'])
 def api_leave_update(request, leave_id):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     leave = Leave.objects.get(leave_id=leave_id)
     form = LeaveUpdateForm(request.data, instance=leave)
     if form.is_valid():
@@ -153,7 +161,7 @@ def api_leave_update(request, leave_id):
 @api_view(['DELETE'])
 def api_leave_delete(request, leave_id):
     if not student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     leave = Leave.objects.get(leave_id=leave_id)
     leave.delete()
     return Response(status=204)
@@ -166,15 +174,17 @@ def api_leave_delete(request, leave_id):
 @api_view(['GET'])
 def api_rebate_list(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     rebates = Rebate.objects.all()
-    serializer = RebateSerializer(rebates, many=True)
-    return Response(serializer.data)
+    if rebates:
+        serializer = RebateSerializer(rebates, many=True)
+        return Response(serializer.data)
+    return Response({'message': 'No rebates found'}, status=404)
 
 @api_view(['GET'])
 def api_total_rebate_amount(request, roll_number):
     if not admin_or_student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     rebates = Rebate.objects.filter(student=roll_number)
     initial_rebate_amount = 0.0
     total_rebate_amount = Decimal(initial_rebate_amount)
@@ -191,7 +201,7 @@ def api_total_rebate_amount(request, roll_number):
 @api_view(['POST'])
 def api_rebate_create(request): 
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     leaves = Leave.objects.filter(status='APPROVED')
     for leave in leaves:
         date1 = leave.leave_from

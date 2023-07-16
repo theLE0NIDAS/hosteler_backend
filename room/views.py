@@ -10,7 +10,7 @@ from .models import Room
 @api_view(['GET'])
 def api_room_list(request):
     if not admin_or_student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     rooms = Room.objects.all()
     if rooms:
         serializer = RoomSerializer(rooms, many=True)
@@ -20,22 +20,21 @@ def api_room_list(request):
 @api_view(['GET'])
 def api_room_search(request):
     if not admin_or_student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     q = request.data.get('q') 
-    if q:
-        rooms = Room.objects.filter(
-            Q(room_number__icontains=q) |
-            Q(occupancy_status__icontains=q)
-        )
-        if rooms:
-            serializer = RoomSerializer(rooms, many=True)
-            return Response(serializer.data)
-        return Response({'message': 'No rooms found'}, status=404)
+    rooms = Room.objects.filter(
+        Q(room_number__icontains=q) |
+        Q(occupancy_status__icontains=q)
+    )
+    if rooms:
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(serializer.data)
+    return Response({'message': 'No rooms found'}, status=404)
 
 @api_view(['GET'])
 def api_room_detail(request, room_number):
     if not admin_or_student_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     room = get_object_or_404(Room, room_number=room_number)
     serializer = RoomSerializer(room)
     return Response(serializer.data)
@@ -43,7 +42,7 @@ def api_room_detail(request, room_number):
 @api_view(['POST'])
 def api_room_create_floor(request):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     num_rooms = int(request.data.get('num_rooms'))
     floor_number = int(request.data.get('floor_number'))
     rooms = []
@@ -69,7 +68,7 @@ def api_room_create_floor(request):
 @api_view(['PUT'])
 def api_room_student_register(request, room_number):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     room = get_object_or_404(Room, room_number=room_number)
     form = RoomForm(request.data, instance=room)
     if form.is_valid():
@@ -83,7 +82,7 @@ def api_room_student_register(request, room_number):
 @api_view(['PUT'])
 def api_room_student_deregister(request, room_number):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     room = get_object_or_404(Room, room_number=room_number)
     room.student = None
     room.check_in_date = None
@@ -105,7 +104,7 @@ def api_room_student_deregister(request, room_number):
 @api_view(['DELETE'])
 def api_room_delete(request, room_number):
     if not admin_required(request):
-        return HttpResponse('Unauthorized', status=401)
+        return Response({'message': 'Unauthorized'}, status=401)
     room = get_object_or_404(Room, room_number=room_number)
     room.delete()
     return Response(status=204)
