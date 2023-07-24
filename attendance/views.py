@@ -82,6 +82,7 @@ def api_attendance_update(request, roll_number):
     form = AttendanceForm(request.data, instance=attendance)
     if form.is_valid:
         attendance = form.save(commit=False)
+        attendance.status = form.cleaned_data['status']
         attendance.save()
         serializer = AttendanceSerializer(attendance)
         return Response(serializer.data, status=201)
@@ -153,6 +154,7 @@ def api_leave_update(request, leave_id):
     form = LeaveUpdateForm(request.data, instance=leave)
     if form.is_valid():
         leave = form.save(commit=False)
+        leave.status = form.cleaned_data['status']
         leave.save()
         serializer = LeaveSerializer(leave)
         return Response(serializer.data, status=201)

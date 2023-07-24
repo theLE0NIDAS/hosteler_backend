@@ -65,7 +65,7 @@ def api_resource_create(request):
     return Response(form.errors, status=400)
 
 @api_view(['PUT'])
-def api_resource_update(request, resource_id):
+def api_resource_update(request, resource_id):   
     if not admin_required(request):
         return Response({'message': 'Unauthorized'}, status=401)
     resource = get_object_or_404(Resource, resource_id=resource_id)

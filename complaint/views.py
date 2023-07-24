@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from base.middleware import admin_required, student_required, admin_or_student_required
 from django.db.models import Q
-from .forms import ComplaintForm
+from .forms import ComplaintForm, ComplaintUpdateForm
 from .models import Complaint
 from .serializers import ComplaintSerializer
 
@@ -12,6 +12,7 @@ def api_complaint_list(request):
     if not admin_required(request):
         return Response({'message': 'Unauthorized'}, status=401)
     complaints = Complaint.objects.all()
+    print(complaints,'fffffffffffffffffff')
     if complaints:
         serializer = ComplaintSerializer(complaints, many=True)
         return Response(serializer.data)
@@ -66,6 +67,8 @@ def api_complaint_update(request, complaint_id):
     complaint = get_object_or_404(Complaint, complaint_id=complaint_id)
     if form.is_valid():
         complaint = form.save(commit=False)
+        complaint.status = form.cleaned_data.get('status')
+        complaint.remarks = form.cleaned_data.get('remarks')
         complaint.save()
         serializer = ComplaintSerializer(complaint)
         return Response(serializer.data)
