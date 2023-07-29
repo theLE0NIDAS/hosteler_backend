@@ -75,5 +75,5 @@ def api_student_login(request):
 def api_logout(request):
     if not admin_or_student_required(request):
         return Response({'message': 'Unauthorized'}, status=401)
-    logout(request)
+    request.delete_cookie('jwt_token')
     return Response({'message': 'Logged out successfully'})
