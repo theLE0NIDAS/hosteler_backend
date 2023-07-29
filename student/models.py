@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class Student(models.Model):
     # Personal Information
@@ -19,7 +20,8 @@ class Student(models.Model):
         ('AB-', 'AB-'),
     )
     blood_group = models.CharField(max_length=3, choices=blood_group_choices, default='')
-    photo = models.ImageField(upload_to='images/', null=True, blank=True)
+    photo = CloudinaryField('image', null=True) 
+    # models.ImageField(upload_to='images/', null=True, blank=True)
     
     # Academic Information
     roll_number = models.CharField(primary_key=True, max_length=20)

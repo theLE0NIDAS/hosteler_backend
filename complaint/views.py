@@ -6,6 +6,7 @@ from django.db.models import Q
 from .forms import ComplaintForm, ComplaintUpdateForm
 from .models import Complaint
 from .serializers import ComplaintSerializer
+import cloudinary.uploader
 
 @api_view(['GET'])
 def api_complaint_list(request):
@@ -49,6 +50,11 @@ def api_complaint_create(request):
     form = ComplaintForm(request.data)
     if form.is_valid():
         complaint = form.save(commit=False)
+        photo = request.FILES.get('image',None)
+        if photo is not None:
+            upload = cloudinary.uploader.upload(photo)
+            print(upload['url'])
+            complaint.photo = upload['url']
         last_complaint = Complaint.objects.order_by('-complaint_id').first() 
         if last_complaint:
             complaint.complaint_id = last_complaint.complaint_id + 1  

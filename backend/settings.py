@@ -17,6 +17,9 @@ import os
 import environ
 import corsheaders
 from corsheaders.middleware import CorsMiddleware
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 # from . import custom_auth_backend
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -51,7 +54,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'drf_yasg',
-
+    'cloudinary',
     'base',
     'student',
     'attendance',
@@ -178,6 +181,12 @@ DATABASES={
 # DATABASES['default'] = dj_database_url.parse('postgres://hosteler_user:1ZFKQOkj4YXyDihgwojRcBz642gbhq1P@dpg-cio32mdph6ei90diuoqg-a.singapore-postgres.render.com/hosteler')
 DATABASES['default'] = dj_database_url.parse('postgres://theLE0NIDAS:0jiabAtqLs3v@ep-frosty-silence-086437.ap-southeast-1.aws.neon.tech/neondb')
 
+cloudinary.config( 
+  cloud_name = env("CLOUDINARY_CLOUD_NAME"), 
+  api_key = env("CLOUDINARY_API_KEY"), 
+  api_secret = env("CLOUDINARY_API_SECRET"),
+  secure = True
+)
 
 
 

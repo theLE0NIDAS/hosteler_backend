@@ -4,7 +4,7 @@ from .models import Complaint
 class ComplaintForm(ModelForm):
     class Meta:
         model = Complaint
-        fields = ['student', 'category', 'location', 'description', 'photo']
+        fields = ['student', 'category', 'location', 'description']
 
 class ComplaintUpdateForm(ModelForm):
     class Meta:

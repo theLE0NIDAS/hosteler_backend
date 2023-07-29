@@ -8,6 +8,7 @@ from .models import Student
 from .serializers import StudentSerializer
 from django.contrib.auth.models import User
 from django.http import HttpResponse
+import cloudinary.uploader
 
 # @api_view(['GET'])
 # def api_student_list(request):
@@ -71,6 +72,11 @@ def api_student_create(request):
         return Response({'message': 'Username already exists'}, status=400)
     elif form.is_valid():
         student = form.save()
+        photo = request.FILES.get('image',None)
+        if photo is not None:
+            upload = cloudinary.uploader.upload(photo)
+            print(upload['url'])
+            student.photo = upload['url']
         user = User.objects.create_user(username=student.roll_number, password=student.roll_number, is_staff=False)
         user.save()
         serializer = StudentSerializer(student)

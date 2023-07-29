@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from .forms import MessForm, MessUpdateForm
 from .serializers import MessSerializer
 from .models import Mess
+import cloudinary.uploader
 
 # ---------------------------------------------------------------------------------#
 # Mess api's
@@ -26,6 +27,11 @@ def api_mess_create(request):
     form = MessForm(request.data)
     if form.is_valid():
         mess = form.save(commit=False)
+        photo = request.FILES.get('image',None)
+        if photo is not None:
+            upload = cloudinary.uploader.upload(photo)
+            print(upload['url'])
+            mess.menu_image = upload['url']
         last_mess = Mess.objects.last()
         if last_mess:
             mess.mess_id = last_mess.mess_id + 1
@@ -54,7 +60,11 @@ def api_mess_update(request, mess_id):
         mess = form.save(commit=False)
         contract_start_date = form.cleaned_data.get('contract_start_date')
         contract_duration_months = form.cleaned_data.get('contract_duration')
-        
+        photo = request.FILES.get('image',None)
+        if photo is not None:
+            upload = cloudinary.uploader.upload(photo)
+            print(upload['url'])
+            mess.menu_image = upload['url']
         if contract_start_date and contract_duration_months:
             contract_end_date = contract_start_date + relativedelta(months=contract_duration_months)
             mess.contract_end_date = contract_end_date

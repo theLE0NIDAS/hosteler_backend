@@ -2,6 +2,7 @@ from django.db import models
 from student.models import Student
 from room.models import Room
 from datetime import datetime
+from cloudinary.models import CloudinaryField
 
 class Complaint(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -17,7 +18,7 @@ class Complaint(models.Model):
     location = models.CharField(max_length=50, default='')
 
     description = models.TextField()
-    photo = models.ImageField(upload_to='images/', null=True, blank=True)
+    photo = CloudinaryField('images', null=True)
     status_choices = (
         ('PENDING', 'Pending'),
         ('IN_PROGRESS', 'In Progress'),

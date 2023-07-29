@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class Resource(models.Model):
     name = models.CharField(max_length=50)
@@ -15,7 +16,7 @@ class Resource(models.Model):
         ('OTHERS', 'Others'),
     )
     resource_type = models.CharField(max_length=15, choices=resource_type_choices, default='OTHERS')
-    resource_photo = models.ImageField(upload_to='images/', null=True, blank=True)
+    resource_photo = CloudinaryField('images', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

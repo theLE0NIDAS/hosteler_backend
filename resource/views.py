@@ -6,6 +6,7 @@ from django.db.models import Q
 from .forms import ResourceForm, ResourceUpdateForm
 from .models import Resource
 from .serializers import ResourceSerializer
+import cloudinary.uploader
 
 @api_view(['GET'])
 def api_resource_list(request):
@@ -47,6 +48,11 @@ def api_resource_create(request):
     form = ResourceForm(request.data)
     if form.is_valid():
         resource = form.save(commit=False)
+        resource_photo = request.FILES.get('image',None)
+        if resource_photo is not None:
+            uploadphoto = cloudinary.uploader.upload(resource_photo)
+            print(uploadphoto['url'])
+            resource.resource_photo = uploadphoto['url']
         if resource.resource_type == 'ELECTRICAL':
             resource.resource_id = 'ELE-' + str(Resource.objects.filter(resource_type='ELECTRICAL').count() + 1)
         elif resource.resource_type == 'PLUMBING':

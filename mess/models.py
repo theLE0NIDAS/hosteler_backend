@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class Mess(models.Model):
     mess_id = models.IntegerField(primary_key=True)
@@ -10,7 +11,7 @@ class Mess(models.Model):
     contract_start_date = models.DateField()
     contract_end_date = models.DateField()
     contract_duration = models.IntegerField()  # Duration in months
-    menu_image = models.ImageField(upload_to='mess_menu', null=True, blank=True)
+    menu_image = CloudinaryField('image', null=True)
     
     def __str__(self):
         return self.vendor_name
