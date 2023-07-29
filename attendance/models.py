@@ -18,7 +18,7 @@ class Attendance(models.Model):
         unique_together = ('student', 'date')
     
     def __str__(self):
-        return f"{self.student.get_roll_number()} - {self.date} - {self.get_status_display()}"
+        return f"{self.student.roll_number} - {self.date} - {self.status}"
 
 class Leave(models.Model):
     leave_id = models.IntegerField(primary_key=True)
@@ -40,7 +40,7 @@ class Leave(models.Model):
         ordering = ['-updated_at', '-created_at']
 
     def __str__(self):
-        return f"{self.student.get_roll_number()} - {self.leave_from} to {self.leave_to} - {self.get_status_display()}"
+        return f"{self.student.roll_number} - {self.leave_from} to {self.leave_to} - {self.status}"
 
 class Rebate(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -52,4 +52,4 @@ class Rebate(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.student.get_roll_number()} - {self.rebate_amount}"
+        return f"{self.student.roll_number} - {self.rebate_amount}"
