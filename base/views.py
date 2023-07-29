@@ -73,5 +73,7 @@ def api_student_login(request):
 
 @api_view(['POST'])
 def api_logout(request):
+    if not admin_or_student_required(request):
+        return Response({'message': 'Unauthorized'}, status=401)
     logout(request)
     return Response({'message': 'Logged out successfully'})

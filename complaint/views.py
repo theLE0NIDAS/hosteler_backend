@@ -66,7 +66,8 @@ def api_complaint_update(request, complaint_id):
     form = ComplaintUpdateForm(request.data)
     complaint = get_object_or_404(Complaint, complaint_id=complaint_id)
     if form.is_valid():
-        complaint = form.save(commit=False)
+        # complaint = form.save(commit=False)
+        # complaint.save()
         complaint.status = form.cleaned_data.get('status')
         complaint.remarks = form.cleaned_data.get('remarks')
         complaint.save()
