@@ -39,6 +39,14 @@ def api_room_detail(request, room_number):
     serializer = RoomSerializer(room)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def api_room_detail_by_student(request, roll_number):
+    if not admin_or_student_required(request):
+        return Response({'message': 'Unauthorized'}, status=401)
+    room = get_object_or_404(Room, student=roll_number)
+    serializer = RoomSerializer(room)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 def api_room_create_floor(request):
     if not admin_required(request):
