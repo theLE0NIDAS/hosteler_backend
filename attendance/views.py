@@ -78,9 +78,9 @@ def api_attendance_update(request, roll_number):
     if not admin_required(request):
         return Response({'message': 'Unauthorized'}, status=401)
     student = get_object_or_404(Student, roll_number=roll_number)
-    attendance = Attendance.objects.get(date=date.today(), student=roll_number)
+    attendance = Attendance.objects.get(date=date.today(), student=student)
     form = AttendanceForm(request.data, instance=attendance)
-    if form.is_valid:
+    if form.is_valid():
         # attendance = form.save(commit=False)
         attendance.status = form.cleaned_data['status']
         attendance.save()
