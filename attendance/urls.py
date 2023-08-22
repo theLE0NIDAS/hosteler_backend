@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
     # API views
-    path('', views.api_attendance_list, name='api_attendance_list'),
+    # path('', views.api_attendance_list, name='api_attendance_list'),
+    path('a/<str:date>/', views.api_attendance_list, name='api_attendance_list'),
     path('search/', views.api_attendance_search, name='api_attendance_search'),
     path('create/', views.api_attendance_create, name='api_attendance_create'),
     path('update/<str:roll_number>/', views.api_attendance_update, name='api_attendance_update'),

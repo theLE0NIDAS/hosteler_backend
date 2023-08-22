@@ -16,11 +16,14 @@ from decimal import Decimal
 # Attendance Api's
 # ---------------------------------------------------------------------------------#
 @api_view(['GET'])
-def api_attendance_list(request):
+def api_attendance_list(request, date):
     if not admin_required(request):
         return Response({'message': 'Unauthorized'}, status=401)
-    attendances = Attendance.objects.all()
-    if attendances:
+
+    # date = datetime.strptime(date, '%Y-%m-%d').date()
+    # print(date)
+    attendances = Attendance.objects.filter(date=date)
+    if attendances.exists():
         serializer = AttendanceSerializer(attendances, many=True)
         return Response(serializer.data)
     return Response({'message': 'No attendance found'}, status=404)
@@ -57,16 +60,22 @@ def api_attendance_create(request):
     rooms = Room.objects.filter(occupancy_status='OCCUPIED')
     leaves = Leave.objects.filter(status='APPROVED')
 
-    leave_students = [leave.student for leave in leaves]
-    attendance_data = [
-        {
-            'student': room.student,
-            'date': datetime.today().date(),
-            'status': 'LEAVE' if room.student in leave_students else 'ABSENT'
-        }
-        for room in rooms
-    ]
-
+    attendance_data = []
+    
+    for room in rooms:
+        student = room.student
+        now = datetime.now().date()
+        
+        # Check if the student is on leave for today
+        is_on_leave = any(leave.student == student and leave.leave_from <= now <= leave.leave_to for leave in leaves)
+        
+        attendance_status = 'LEAVE' if is_on_leave else 'ABSENT'
+        
+        attendance_data.append({
+            'student': student,
+            'date': now,
+            'status': attendance_status
+        })
     attendance_serializer = AttendanceSerializer(data=attendance_data, many=True)
     if attendance_serializer.is_valid():
         attendance_serializer.save()
