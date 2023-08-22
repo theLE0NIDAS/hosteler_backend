@@ -29,10 +29,10 @@ def api_attendance_list(request, date):
     return Response({'message': 'No attendance found'}, status=404)
 
 @api_view(['GET'])
-def api_attendance_detail(request, roll_number):
+def api_attendance_detail(request, roll_number, date):
     if not admin_required(request):
         return Response({'message': 'Unauthorized'}, status=401)
-    attendance = Attendance.objects.filter(student=roll_number)
+    attendance = Attendance.objects.filter(student=roll_number, date=date)
     if attendance.exists():
         serializer = AttendanceSerializer(attendance, many=True)
         return Response(serializer.data)

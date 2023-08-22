@@ -23,6 +23,6 @@ urlpatterns = [
     # path('rebate/<int:rebate_id>/update/', views.api_rebate_update, name='api_rebate_update'),
     # path('rebate/<int:rebate_id>/delete/', views.api_rebate_delete, name='api_rebate_delete'),
     
-    path('<str:roll_number>/', views.api_attendance_detail, name='api_attendance_detail'),
+    path('<str:roll_number>/<str:date>/', views.api_attendance_detail, name='api_attendance_detail'),
     # path('<int:attendance_id>/delete/', views.api_attendance_delete, name='api_attendance_delete'),
 ]
