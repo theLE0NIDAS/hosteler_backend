@@ -48,7 +48,7 @@ def api_resource_create(request):
     form = ResourceForm(request.data)
     if form.is_valid():
         resource = form.save(commit=False)
-        resource_photo = request.FILES.get('image',None)
+        resource_photo = request.FILES.get('resource_photo')
         if resource_photo is not None:
             uploadphoto = cloudinary.uploader.upload(resource_photo)
             print(uploadphoto['url'])
