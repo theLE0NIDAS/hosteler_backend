@@ -72,13 +72,17 @@ def api_student_create(request):
         return Response({'message': 'Username already exists'}, status=400)
     elif form.is_valid():
         student = form.save()
-        photo = request.FILES.get('image',None)
+        print(request.data)
+        photo = request.FILES.get('photo')
+        print(photo)
         if photo is not None:
             upload = cloudinary.uploader.upload(photo)
             print(upload['url'])
             student.photo = upload['url']
         user = User.objects.create_user(username=student.roll_number, password=student.roll_number, is_staff=False)
         user.save()
+        print(student.photo)
+        student.save()
         serializer = StudentSerializer(student)
         return Response(serializer.data, status=201)
     return Response(form.errors, status=400)
