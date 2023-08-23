@@ -164,6 +164,21 @@ def api_leave_update(request, leave_id):
     if form.is_valid():
         # leave = form.save(commit=False)
         leave.status = form.cleaned_data['status']
+        if leave.status == 'APPROVED':
+            date1 = leave.leave_from
+            date2 = leave.leave_to
+            delta = date2 - date1
+            num_of_days = delta.days
+            mess = Mess.objects.first()
+            if 3 <= num_of_days <= 7:
+                rebate_amount = (mess.rebate_percentage / 100) * mess.cost_per_day * num_of_days
+            elif num_of_days > 7:
+                rebate_amount = (mess.rebate_percentage / 100) * mess.cost_per_day * 7
+            else:
+                rebate_amount = 0.0
+
+            if rebate_amount >= 0:
+                leave.rebate_associated = rebate_amount
         leave.save()
         serializer = LeaveSerializer(leave)
         return Response(serializer.data, status=201)

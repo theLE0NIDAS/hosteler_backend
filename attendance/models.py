@@ -27,6 +27,7 @@ class Leave(models.Model):
     leave_to = models.DateField()
     leave_location = models.CharField(max_length=200)
     reason_for_leave = models.CharField(max_length=200)
+    rebate_associated = models.DecimalField(max_digits=5, decimal_places=2, default=0.0)
     status_choices = (
         ('PENDING', 'Pending'),
         ('APPROVED', 'Approved'),
