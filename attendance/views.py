@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from base.middleware import admin_required, student_required, admin_or_student_required
 from django.db.models import Q
 from datetime import datetime, date
+from django.utils import timezone
 from .models import Attendance, Leave, Rebate
 from room.models import Room
 from student.models import Student
@@ -145,7 +146,9 @@ def api_leave_create(request):
     if form.is_valid():
         
         leave = form.save(commit=False)
-        last_leave = Leave.objects.last()  # Get the last leave object
+        leave.created_at = timezone.now()
+        last_leave = Leave.objects.first()  # Get the last leave object
+        print(last_leave)
         if last_leave:
             leave.leave_id = last_leave.leave_id + 1  # Increment the leave_id
         else:
